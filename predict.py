@@ -1,98 +1,117 @@
 import joblib
 import pandas as pd
+from datetime import datetime
 
-# Load model
+
+# Load saved files
 model = joblib.load("model/sleep_model.pkl")
 scaler = joblib.load("model/scaler.pkl")
-label_encoders = joblib.load("model/label_encoder.pkl")
 
 
-def encode_value(column, value):
-    """Safely encode categorical values"""
-    le = label_encoders[column]
-
-    # If value not found in encoder, use first available class
-    if value not in le.classes_:
-        print(f"Warning: '{value}' not found for {column}. Using '{le.classes_[0]}'")
-        value = le.classes_[0]
-
-    return le.transform([value])[0]
+# Manual Encoding
+gender_mapping = {
+    "Male": 0,
+    "Female": 1
+}
 
 
-def predict_sleep_quality(
-    gender,
+smoking_mapping = {
+    "No": 0,
+    "Yes": 1,
+
+    # Alternative dataset values
+    "Never": 0,
+    "Former": 1,
+    "Current": 2
+}
+
+
+
+# Convert HH:MM time into decimal hours
+def convert_time(time_str):
+
+    t = datetime.strptime(time_str, "%H:%M")
+
+    return t.hour + (t.minute / 60)
+
+
+
+def predict_sleep(
     age,
-    occupation,
+    gender,
+    bedtime,
+    wakeup_time,
     sleep_duration,
-    physical_activity_level,
-    stress_level,
-    bmi_category,
-    heart_rate,
-    daily_steps,
-    blood_pressure,
-    sleep_disorder,
+    rem_sleep,
+    deep_sleep,
+    light_sleep,
+    awakenings,
+    caffeine,
+    alcohol,
+    smoking_status,
+    exercise_frequency
 ):
 
-    systolic_bp, diastolic_bp = map(int, blood_pressure.split("/"))
+    # Encode categorical values
+    gender = gender_mapping[gender]
+    smoking_status = smoking_mapping[smoking_status]
 
-    gender = encode_value("Gender", gender)
-    occupation = encode_value("Occupation", occupation)
-    bmi_category = encode_value("BMI Category", bmi_category)
-    sleep_disorder = encode_value("Sleep Disorder", sleep_disorder)
 
-    input_data = pd.DataFrame([[
-        gender,
-        age,
-        occupation,
-        sleep_duration,
-        physical_activity_level,
-        stress_level,
-        bmi_category,
-        heart_rate,
-        daily_steps,
-        sleep_disorder,
-        systolic_bp,
-        diastolic_bp
-    ]], columns=[
-        "Gender",
-        "Age",
-        "Occupation",
-        "Sleep Duration",
-        "Physical Activity Level",
-        "Stress Level",
-        "BMI Category",
-        "Heart Rate",
-        "Daily Steps",
-        "Sleep Disorder",
-        "Systolic_BP",
-        "Diastolic_BP"
-    ])
+    # Convert time into decimal hours
+    bedtime = convert_time(bedtime)
+    wakeup_time = convert_time(wakeup_time)
 
+
+    # Create input dataframe
+    input_data = pd.DataFrame([{
+
+        "Age": age,
+        "Gender": gender,
+        "Bedtime": bedtime,
+        "Wakeup time": wakeup_time,
+        "Sleep duration": sleep_duration,
+        "REM sleep percentage": rem_sleep,
+        "Deep sleep percentage": deep_sleep,
+        "Light sleep percentage": light_sleep,
+        "Awakenings": awakenings,
+        "Caffeine consumption": caffeine,
+        "Alcohol consumption": alcohol,
+        "Smoking status": smoking_status,
+        "Exercise frequency": exercise_frequency
+
+    }])
+
+
+    # Scale input data
     input_scaled = scaler.transform(input_data)
 
-    prediction = model.predict(input_scaled)
 
-    return round(prediction[0], 2)
+    # Predict Sleep Efficiency
+    prediction = model.predict(input_scaled)[0]
 
 
-if __name__ == "__main__":
+    # Convert to percentage
+    sleep_efficiency = round(prediction * 100, 2)
 
-    print("Available Sleep Disorder values:")
-    print(label_encoders["Sleep Disorder"].classes_)
-    print()
 
-    result = predict_sleep_quality(
-        gender="Male",
-        age=27,
-        occupation="Engineer",
-        sleep_duration=7.5,
-        physical_activity_level=45,
-        stress_level=5,
-        bmi_category="Normal",
-        heart_rate=72,
-        daily_steps=8000,
-        blood_pressure="120/80",
-        sleep_disorder="No Disorder"
-    )
+    # Sleep Quality
+    if prediction >= 0.85:
 
-    print("Predicted Quality of Sleep:", result)
+        sleep_quality = "Excellent 😴"
+
+    elif prediction >= 0.75:
+
+        sleep_quality = "Average 🙂"
+
+    else:
+
+        sleep_quality = "Poor 😟"
+
+
+
+    return {
+
+        "sleep_efficiency": sleep_efficiency,
+        "sleep_quality": sleep_quality
+
+    }
