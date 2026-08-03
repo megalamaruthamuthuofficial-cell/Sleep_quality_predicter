@@ -1,58 +1,38 @@
 import pandas as pd
-from sklearn.preprocessing import LabelEncoder, StandardScaler
-import joblib
-import os
+from sklearn.preprocessing import LabelEncoder
 
 
 def preprocess_data(file_path):
     # Load dataset
     df = pd.read_csv(file_path)
 
-    # Remove Person ID
-    if "Person ID" in df.columns:
-        df.drop("Person ID", axis=1, inplace=True)
+    # Remove unwanted column
+    if "ID" in df.columns:
+        df.drop("ID", axis=1, inplace=True)
 
-    # Handle missing values
-    df.dropna(inplace=True)
+    # Convert Bedtime & Wakeup time into datetime
+    df["Bedtime"] = pd.to_datetime(df["Bedtime"])
+    df["Wakeup time"] = pd.to_datetime(df["Wakeup time"])
 
-    # Split Blood Pressure into Systolic and Diastolic
-    bp = df["Blood Pressure"].str.split("/", expand=True)
-    df["Systolic_BP"] = bp[0].astype(int)
-    df["Diastolic_BP"] = bp[1].astype(int)
-
-    # Remove original Blood Pressure column
-    df.drop("Blood Pressure", axis=1, inplace=True)
+    # Convert time into hour format
+    df["Bedtime"] = df["Bedtime"].dt.hour + df["Bedtime"].dt.minute / 60
+    df["Wakeup time"] = df["Wakeup time"].dt.hour + df["Wakeup time"].dt.minute / 60
 
     # Encode categorical columns
+    label_encoder = LabelEncoder()
+
     categorical_columns = [
         "Gender",
-        "Occupation",
-        "BMI Category",
-        "Sleep Disorder"
+        "Smoking status"
     ]
 
-    label_encoders = {}
+    for col in categorical_columns:
+        df[col] = label_encoder.fit_transform(df[col])
 
-    for column in categorical_columns:
-        le = LabelEncoder()
-        df[column] = le.fit_transform(df[column].astype(str))
-        label_encoders[column] = le
+    # Input Features
+    X = df.drop("Sleep efficiency", axis=1)
 
-    # Features and Target
-    X = df.drop("Quality of Sleep", axis=1)
-    y = df["Quality of Sleep"]
+    # Target
+    y = df["Sleep efficiency"]
 
-    # Feature Scaling
-    scaler = StandardScaler()
-    X_scaled = scaler.fit_transform(X)
-
-    # Create model folder if not exists
-    os.makedirs("model", exist_ok=True)
-
-    # Save scaler
-    joblib.dump(scaler, "model/scaler.pkl")
-
-    # Save Label Encoders
-    joblib.dump(label_encoders, "model/label_encoder.pkl")
-
-    return X_scaled, y
+    return X, y, label_encoder
