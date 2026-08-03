@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Sleep Prediction Result</title>
+
+
+    <!-- Main CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+
+
+    <!-- Loader CSS -->
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/loader.css') }}">
+
+</head>
+
+
+<body>
+
+
+<div class="container">
+
+
+    <h1>🌙 Sleep Prediction Result</h1>
+
+
+    <!-- ========================= -->
+    <!-- Prediction Result -->
+    <!-- ========================= -->
+
+
+    <div class="result-container">
+
+
+        <div class="result-box">
+
+            <h2>📊 Sleep Efficiency</h2>
+
+            <h1 class="efficiency">
+
+                {{ sleep_efficiency }} %
+
+            </h1>
+
+        </div>
+
+
+
+        <div class="result-box">
+
+            <h2>🌙 Sleep Quality</h2>
+
+            <h1 class="quality">
+
+                {{ sleep_quality }}
+
+            </h1>
+
+        </div>
+
+
+
+        <div class="result-box">
+
+            <h2>⏰ Recommended Bedtime</h2>
+
+            <h1 class="quality">
+
+                {{ recommended_bedtime }}
+
+            </h1>
+
+        </div>
+
+
+
+        <div class="result-box">
+
+            <h2>💡 Sleep Tips</h2>
+
+            <ul>
+
+                {% for tip in tips %}
+
+                    <li>{{ tip }}</li>
+
+                {% endfor %}
+
+            </ul>
+
+        </div>
+
+
+
+        <div class="result-box">
+
+            <h2>✨ Sleep Quote</h2>
+
+            <p>
+
+                {{ quote }}
+
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+
+    <!-- ========================= -->
+    <!-- Action Buttons -->
+    <!-- ========================= -->
+
+
+    <div class="button-box">
+
+
+        <a href="/">
+
+            <button type="button">
+
+                🔄 Predict Again
+
+            </button>
+
+        </a>
+
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>
