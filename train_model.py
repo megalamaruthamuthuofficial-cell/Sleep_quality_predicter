@@ -1,14 +1,15 @@
-from utils.preprocess import preprocess_data
+import os
+import joblib
 
 from sklearn.model_selection import train_test_split
+from sklearn.preprocessing import StandardScaler
 from sklearn.ensemble import RandomForestRegressor
-from sklearn.metrics import r2_score, mean_absolute_error
-import joblib
-import os
+from sklearn.metrics import mean_absolute_error, r2_score
 
+from utils.preprocess import preprocess_data
 
 # Load and preprocess dataset
-X, y = preprocess_data("dataset/Sleep_health_and_lifestyle_dataset.csv")
+X, y, label_encoder = preprocess_data("dataset/Sleep_Efficiency.csv")
 
 # Split dataset
 X_train, X_test, y_train, y_test = train_test_split(
@@ -18,36 +19,38 @@ X_train, X_test, y_train, y_test = train_test_split(
     random_state=42
 )
 
-# Create Random Forest Regressor
+# Scale features
+scaler = StandardScaler()
+
+X_train = scaler.fit_transform(X_train)
+X_test = scaler.transform(X_test)
+
+# Train Model
 model = RandomForestRegressor(
     n_estimators=100,
     random_state=42
 )
 
-# Train model
 model.fit(X_train, y_train)
 
-# Predict
+# Prediction
 y_pred = model.predict(X_test)
 
-# Evaluation
-r2 = r2_score(y_test, y_pred)
-mae = mean_absolute_error(y_test, y_pred)
-
-print("=" * 40)
-print("Sleep Quality Predictor")
-print("=" * 40)
-print(f"R² Score : {r2:.4f}")
-print(f"MAE      : {mae:.4f}")
+# Accuracy
+print("Model Performance")
+print("----------------------")
+print("R2 Score :", r2_score(y_test, y_pred))
+print("MAE      :", mean_absolute_error(y_test, y_pred))
 
 # Create model folder if not exists
 os.makedirs("model", exist_ok=True)
 
-# Save trained model
+# Save files
 joblib.dump(model, "model/sleep_model.pkl")
+joblib.dump(scaler, "model/scaler.pkl")
+joblib.dump(label_encoder, "model/label_encoder.pkl")
 
-print("\nModel saved successfully!")
-print("Location : model/sleep_model.pkl")
-print("\nModel Training Completed Successfully!")
-print(f"Training Samples : {len(X_train)}")
-print(f"Testing Samples  : {len(X_test)}")
+print("\n✅ Model Trained Successfully!")
+print("✅ sleep_model.pkl saved")
+print("✅ scaler.pkl saved")
+print("✅ label_encoder.pkl saved")
