@@ -1,0 +1,430 @@
+/* ===========================
+   Google Font
+=========================== */
+
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+
+/* ===========================
+   Global
+=========================== */
+
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:'Poppins',sans-serif;
+}
+
+body{
+
+    background:linear-gradient(135deg,#6dd5fa,#057bc9);
+
+    min-height:100vh;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+    padding:30px;
+}
+
+
+/* ===========================
+   Main Container
+=========================== */
+
+.container{
+
+    width:100%;
+
+    display:flex;
+
+    justify-content:center;
+
+    align-items:center;
+
+}
+
+
+/* ===========================
+   Card
+=========================== */
+
+.card{
+
+    width:900px;
+
+    background:#ffffff;
+
+    padding:40px;
+
+    border-radius:20px;
+
+    box-shadow:0 15px 35px rgba(0,0,0,.2);
+
+}
+
+
+/* ===========================
+   Heading
+=========================== */
+
+h1{
+
+    text-align:center;
+
+    color:#1e3a8a;
+
+    margin-bottom:10px;
+
+}
+
+.subtitle{
+
+    text-align:center;
+
+    color:#555;
+
+    margin-bottom:30px;
+
+}
+/* ===========================
+   Form Row
+=========================== */
+
+.row{
+
+    display:flex;
+
+    gap:20px;
+
+    margin-bottom:20px;
+
+    flex-wrap:wrap;
+
+}
+
+
+/* ===========================
+   Input Box
+=========================== */
+
+.input-box{
+
+    flex:1;
+
+    display:flex;
+
+    flex-direction:column;
+
+}
+
+
+/* ===========================
+   Labels
+=========================== */
+
+.input-box label{
+
+    margin-bottom:8px;
+
+    font-weight:600;
+
+    color:#333;
+
+}
+
+
+/* ===========================
+   Input Fields
+=========================== */
+
+.input-box input,
+
+.input-box select{
+
+    padding:12px 15px;
+
+    border:2px solid #d1d5db;
+
+    border-radius:10px;
+
+    outline:none;
+
+    font-size:16px;
+
+    transition:.3s;
+
+    background:#fff;
+
+}
+
+
+/* ===========================
+   Input Focus
+=========================== */
+
+.input-box input:focus,
+
+.input-box select:focus{
+
+    border-color:#2563eb;
+
+    box-shadow:0 0 8px rgba(37,99,235,.3);
+
+}
+
+
+/* ===========================
+   Placeholder
+=========================== */
+
+.input-box input::placeholder{
+
+    color:#9ca3af;
+
+}
+/* ===========================
+   Button
+=========================== */
+
+.button-box{
+
+    text-align:center;
+
+    margin-top:30px;
+
+}
+
+.button-box button{
+
+    background:#2563eb;
+
+    color:#ffffff;
+
+    border:none;
+
+    padding:15px 35px;
+
+    border-radius:10px;
+
+    font-size:17px;
+
+    font-weight:600;
+
+    cursor:pointer;
+
+    transition:0.3s;
+
+}
+
+.button-box button:hover{
+
+    background:#1d4ed8;
+
+    transform:translateY(-3px);
+
+    box-shadow:0 8px 20px rgba(37,99,235,.3);
+
+}
+
+
+/* ===========================
+   Result Container
+=========================== */
+
+.result-container{
+
+    display:flex;
+
+    gap:20px;
+
+    justify-content:center;
+
+    flex-wrap:wrap;
+
+    margin:30px 0;
+
+}
+
+.result-box{
+
+    flex:1;
+
+    min-width:250px;
+
+    background:#f8fafc;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    text-align:center;
+
+    box-shadow:0 8px 20px rgba(0,0,0,.08);
+
+}
+
+.result-box h2{
+
+    color:#0b4cda;
+
+    margin-bottom:15px;
+
+}
+
+.efficiency{
+
+    color:#16a34a;
+
+    font-size:42px;
+
+    margin-bottom:10px;
+
+}
+
+.quality{
+
+    color:#f97316;
+
+    font-size:36px;
+
+}
+/* ===========================
+   Responsive Design
+=========================== */
+
+@media (max-width:768px){
+
+    .card{
+
+        width:100%;
+
+        padding:25px;
+
+    }
+
+    .row{
+
+        flex-direction:column;
+
+        gap:15px;
+
+    }
+
+    .button-box button{
+
+        width:100%;
+
+    }
+
+    .result-container{
+
+        flex-direction:column;
+
+    }
+
+}
+
+
+/* ===========================
+   Animation
+=========================== */
+
+.card{
+
+    animation:fadeIn 0.8s ease-in-out;
+
+}
+
+@keyframes fadeIn{
+
+    from{
+
+        opacity:0;
+
+        transform:translateY(30px);
+
+    }
+
+    to{
+
+        opacity:1;
+
+        transform:translateY(0);
+
+    }
+
+}
+
+
+/* ===========================
+   Footer (Optional)
+=========================== */
+
+.footer{
+
+    text-align:center;
+
+    margin-top:20px;
+
+    color:#666;
+
+    font-size:14px;
+
+}
+/* ===========================
+   Loader Container
+=========================== */
+
+.loader-container{
+
+    position:fixed;
+
+    top:0;
+
+    left:0;
+
+    width:100%;
+
+    height:100%;
+
+    background:rgba(255,255,255,0.95);
+
+    display:none;
+
+    justify-content:center;
+
+    align-items:center;
+
+    flex-direction:column;
+
+    z-index:9999;
+
+}
+
+
+/* ===========================
+   Loader Circle
+=========================== */
+
+.loader{
+
+    width:70px;
+
+    height:70px;
+
+    border:8px solid #dbeafe;
+
+    border-top:8px solid #2563eb;
+
+    border-radius:50%;
+
+    animation:spin 1s linear infinite;
+
+    margin-bottom:20px;
+
+}
